@@ -1,0 +1,7 @@
+#COERÇAO DE CLASSES
+vetor4 <-c(0,0,1,0)
+class(vetor4)
+as.logical(vetor4)
+vetor5 <-c("fundamental","medio","superior")
+vetor5 <- as.factor(vetor5)
+class(vetor5)
