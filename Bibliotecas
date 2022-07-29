@@ -1,0 +1,4 @@
+install.packages("ggplot") #instala a biblioteca
+
+library(ggplot2) #importa a biblioteca
+library(devtools)
