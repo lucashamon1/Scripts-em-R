@@ -1,0 +1,15 @@
+#vetores
+inteiros <-c(2,10,5,7,300)
+class(inteiros)
+texto <-c("palavra","livro","biblioteca")
+class(texto)
+
+#matrizes
+matrix(1:6, nrow=2, ncol=3)
+
+#listas
+vetor1 <- c(TRUE,TRUE,FALSE)
+vetor2 <- c(2,3,4,5,6,7,8,9)
+vetor3 <- "Esse e um texto"
+lista <- list(vetor1,vetor2,vetor3)
+lista[[2]][[3]]
