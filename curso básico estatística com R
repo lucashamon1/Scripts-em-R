@@ -1,0 +1,23 @@
+# Definindo o projeto do curso
+#Pergunta: o que afeta a qualidade do ar? Como?
+
+#descrevendo as variaveis
+
+#Analise descritiva
+summary(airquality)
+plot(airquality, col="blue", main="analise da qualidade do ar", )
+dados <- airquality
+#Criando um modelo estatistico
+#Modelo de Regressao Linear
+m1 <- lm(Solar.R~Temp, data=dados)
+summary(m1)
+m2 <- lm(Month~Temp, data=dados)
+summary(m2)
+summary(dados)
+
+#Regressao Multipla
+mRM1 <- lm(Day~Temp+Wind, data=dados)
+summary(mRM1)
+plot(Day~Temp+Wind, data=dados)
+curve(-0.14001 + 27.74311*x, add=TRUE)
+curve(-0.14001 + 27.74311*x+  -0.10389, lty=2, add=TRUE)
