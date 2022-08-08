@@ -1,13 +1,127 @@
-Version: 1.0
+sessionInfo()
+getwd()
+#importando o dplyr
+library(dplyr)
+#lendo dataframe
+dados <- read.csv('dados.csv')
+dados
+head(dados, 5)
+#identificando as variaveis
+select(dados, Anos.de.Estudo)
+unique(select(dados, Anos.de.Estudo))
+arrange(unique(select(dados, Anos.de.Estudo)),Anos.de.Estudo)
+c(arrange(unique(select(dados, Anos.de.Estudo)),Anos.de.Estudo))
+arrange(unique(select(dados, UF)),UF)
+arrange(unique(select(dados, Sexo)),Sexo)
+arrange(unique(select(dados, Cor)), Cor)
+sprintf('De %s a %s anos', min(dados$Idade), max(dados$Idade))
+sprintf('De %s a %s metros', min(dados$Altura), max(dados$Altura))
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+#Distribuiçoes de Frequencias
+  #Variaveis Qualitativas
+table(dados$Sexo)
+dist_freq_quali <- cbind(freq= table(dados$Sexo),percent = prop.table(table(dados$Sexo)) *100)
+dist_freq_quali
+colnames(dist_freq_quali) <- c('Frequencia', 'Percentual(%)')
+rownames(dist_freq_quali) <- c('Masculino', 'Feminino')
+dist_freq_quali
+  #Variaveis Qualitativas com 2 variaveis
+frequencia <-table(dados$Sexo, dados$Cor)
+frequencia
+colnames(frequencia) <- c('Indigena', 'Branca', 'Preta', 'Parda', 'Amarela')
+rownames(frequencia) <- c('Masculino', 'Feminino')
+frequencia <- cbind(frequencia)
+frequencia
+percentual <- prop.table(frequencia) * 100
+percentual
+medias <- tapply(dados$Renda, list(dados$Sexo, dados$Cor), mean)
+medias
+rownames(medias) <- c('Masculino', 'Feminino')
+colnames(medias) <- c('Indigena', 'Branca', 'Preta', 'Parda', 'Amarela')
+medias
+  #Variaveis quantitativas
+  #Classes personalizadas
+min(dados$Renda)
+max(dados$Renda)
+classes <- c(0, 1576, 3152, 7888, 15760,200000) #valores baseados nas clases sociais e o salario minimo de quando foi feito o levantamento
+labels <- c('E','D','C','B','A')
+frequencia2 <- table(cut(
+  x=dados$Renda,
+  breaks = classes,
+  labels = labels,
+  include.lowest = TRUE
+))
+frequencia2
+percentual2 <- prop.table(frequencia2) * 100
+percentual2
+dist_renda <-cbind('Frequencia' = frequencia2, 'Porcentagem(%)' = percentual2)
+dist_renda
+dist_renda[
+  order(row.names(dist_renda)),
+]
+  #Classes de Amplitude Fixa
+n <-nrow(dados)
+k <- 1+ (10/3) * log10(n) # Regra de Sturges
+k
+k <- round(k)
+k
+#k = 17, entao nossa distribuiçao de frequencias tera 17 classes
+#Histograma
+library(ggplot2)
+options(repr.plot.width=7, repr.plot.height=4)
+hist(dados$Altura)
+ggplot(dados,aes(x = Idade, y = ..density..))+
+  geom_histogram(binwidth = 0.25, color= 'black', alpha=0.9) +
+  geom_density(color='darkblue') +
+  ylab('Frequenca') +
+  xlab('Idade') +
+  ggtitle('Histograma das Idades')
+theme( plot.title = element_text(size = 14, hjust = 0.5)
+#Medidas de Tendencia Central
+#Media
+mean(dados$Renda)
+aggregate(list(Renda = dados$Renda), list(Sexo = dados$Sexo), mean)
+aggregate(list(Renda = dados$Renda), list(Estudo = dados$Anos.de.Estudo), mean)
+#Mediana
+median(dados$Renda)
+aggregate(list(Renda = dados$Renda), list(Sexo = dados$Sexo), median)
+aggregate(list(Renda = dados$Renda), list(Estudo = dados$Anos.de.Estudo), median)
+#Moda
+freq = table(dados$Renda)
+freq
+freq[freq ==max(freq)] # a moda e R$ 788,00 com 6881 registros
+freq2 = table(dados$Altura)
+freq2[freq2 ==max(freq2)] # a altura e uma variavel multimodal
+# Relação entre medidas de tendência central
+ggplot(dados[dados$Renda < 20000,], aes(x = Renda, y = ..density..)) +
+  geom_histogram(binwidth = 500) +
+  geom_density(color = 'green')
+#Assimetrica a esquerda
 
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
+ggplot(dados, aes(x = Altura, y = ..density..)) +
+  geom_histogram() +
+  geom_density(color = 'green')
+#Simetrica
 
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+ggplot(dados, aes(x = Anos.de.Estudo, y = ..density..)) +
+  geom_histogram() +
+  geom_density(color = 'green')
+
+
+#Medidas Separatrizes
+#Quartis, decis e percentis
+quantile(dados$Renda, c(0.25, 0.5, 0.75))
+decis <-c()
+for (i in 1:9){
+  decis <- c(decis, i/10)
+}
+decis
+quantile(dados$Renda, decis)
+centis <-c()
+for (i in 1:99){
+  centis <- c(centis, i/100)
+}
+centis
+quantile(dados$Renda, centis)
+length(dados$Renda[dados$Renda < 788 ]) / length(dados$Renda) * 100 # populaçao que ganhava menos que 1 salario minimo em 20215
+# 19,91% da populaçao ganhava menos que o salario minimo
