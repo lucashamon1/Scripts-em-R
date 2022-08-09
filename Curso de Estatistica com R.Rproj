@@ -125,3 +125,21 @@ centis
 quantile(dados$Renda, centis)
 length(dados$Renda[dados$Renda < 788 ]) / length(dados$Renda) * 100 # populaçao que ganhava menos que 1 salario minimo em 20215
 # 19,91% da populaçao ganhava menos que o salario minimo
+
+
+#Medidas de Dispersao
+#Variancia
+var(dados$Anos.de.Estudo)
+var(dados$Renda)
+#Desvio Padrao
+#e a raiz quadrada da variancia
+sqrt(var(dados$Anos.de.Estudo))
+sd(dados$Anos.de.Estudo)
+
+#outro exemplo
+dataset <- data.frame( 
+  Sexo = c('H', 'M', 'M', 'M', 'M', 'H', 'H', 'H', 'M', 'M'), 
+  Idade = c(53, 72, 54, 27, 30, 40, 58, 32, 44, 51) 
+) 
+sd(dataset$Idade)
+aggregate(list(Idade = dataset$Idade), list(Sexo = dataset$Sexo), sd)[2, 2] #desvio padrao para as mulheres
