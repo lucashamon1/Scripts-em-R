@@ -1,0 +1,55 @@
+# Pergunta: O que afeta a presença de focos de dengue
+library(DAAG)
+data(dengue)
+names(dengue)
+summary(dengue)
+#Modelo 1 - O que e uma inferencia?
+mb <- glm(NoYes~humid, data=dengue, family=binomial)
+summary(mb)
+#P < 0,005 a variavel foi significativo
+#Nesse caso a humidade e significativa
+#P = 2e-16
+library(ggplot2)
+ggplot(dengue, aes(x=humid, y=NoYes)) +
+  geom_point() +
+  geom_smooth(method = 'glm', method.args = list(family='binomial'))
+#De acordo com o grafico, quanto mais umidade maior a probabilidade de se ter focos de dengue
+#Predizendo novos valores
+hn <- data.frame(humid=23)
+predict(mb, hn, type='response')
+#De acordo com o modelo criado a probabilidade de haver um foco de dengue nesse novo ponto e de 80,43%
+
+#Aumentando o modelo
+mb2 <- glm(NoYes~humid+temp, data=dengue, family=binomial)
+summary(mb2)
+#A temperatura tambem e uma variavel significativa
+hn2 <- data.frame(humid=23, temp=20)
+predict(mb2, hn2, type = 'response')
+#Considerando as duas variaveis a probabilidade foi de 77,1%
+
+#Decision boundaries
+library(lattice)
+xyplot(temp~humid, data = dengue, groups = NoYes)
+
+#Preparando os Dados Treino e Teste para o ML
+set.seed(123) #controlar a aleatoriedade
+library(caret)
+  #remover valores inexistentes (NAs)
+dengue2 <- na.omit(dengue)
+  #Separa os dados
+dataindex <- createDataPartition(dengue2$NoYes,p=.7, list = FALSE)
+dataindex
+denguetreino <- dengue2[dataindex,] #montando o treino
+dengueteste <- dengue2[-dataindex,] #montando o teste
+#Classificador Dummy -- e o classificador mais basico, usado como parametro para testar a qualidade dos modelos
+maiscomum <- sum(denguetreino$NoYes ==1)/(dim(denguetreino)[1])
+maiscomum
+if (maiscomum >= 0.5){
+  print('classeMaisComum <- 1')
+  classeMaisComum <- 1
+  } else {
+  print('classeMaisComum <- 0')
+  classeMaisComum <- 0}
+taxadeAcerto <- sum(dengueteste$NoYes==classeMaisComum)/(dim(dengueteste)[1])
+taxadeAcerto
+# Taxa de Acerto = 58,32%
