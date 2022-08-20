@@ -53,3 +53,13 @@ if (maiscomum >= 0.5){
 taxadeAcerto <- sum(dengueteste$NoYes==classeMaisComum)/(dim(dengueteste)[1])
 taxadeAcerto
 # Taxa de Acerto = 58,32%
+library(rattle)
+modelohumid<-rpart(as.factor(NoYes)~humid, data=denguetreino)
+fancyRpartPlot(modelohumid)
+modelotree<-rpart(as.factor(NoYes)~trees, data=denguetreino)
+fancyRpartPlot(modelotree)
+modelofull<-rpart(as.factor(NoYes)~temp+trees, data=denguetreino)
+fancyRpartPlot(modelofull)
+modeloML1<-train(as.factor(NoYes)~humid+temp+trees, data=denguetreino, method="glm")
+modeloML2<-train(as.factor(NoYes)~humid+temp+trees, data=denguetreino, method="ranger")
+modeloML3<-train(as.factor(NoYes)~humid+temp+trees, data=denguetreino, method="avNNet")
