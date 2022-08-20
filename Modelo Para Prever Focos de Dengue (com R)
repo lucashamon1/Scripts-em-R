@@ -63,3 +63,6 @@ fancyRpartPlot(modelofull)
 modeloML1<-train(as.factor(NoYes)~humid+temp+trees, data=denguetreino, method="glm")
 modeloML2<-train(as.factor(NoYes)~humid+temp+trees, data=denguetreino, method="ranger")
 modeloML3<-train(as.factor(NoYes)~humid+temp+trees, data=denguetreino, method="avNNet")
+
+
+#conclusão dentre todas as variáveis estudadas vemos que a que mais influência a presença de focos de dengue em uma determinada região é a umidade da mesma
